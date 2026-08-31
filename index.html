@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendWise | Automated UPI Cashflow & Trading Sandbox</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <h1>Spend<span>Wise</span></h1>
+        </div>
+        <nav aria-label="Main Navigation">
+            <ul class="nav-links">
+                <li><a href="#cashflow">UPI Cashflow</a></li>
+                <li><a href="#trading">Trading Sandbox</a></li>
+                <li><a href="#academy">Academy</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Daily UPI Cashflow Manager -->
+        <section id="cashflow" class="dashboard-card" aria-labelledby="cashflow-heading">
+            <h2 id="cashflow-heading">UPI Daily Cashflow Manager</h2>
+            <div class="budget-summary">
+                <p>Daily Budget Remaining: <strong id="budget-left">₹350.00</strong></p>
+            </div>
+            <form id="upi-expense-form">
+                <div class="form-group">
+                    <label for="expense-amount">Expense Amount (₹)</label>
+                    <input type="number" id="expense-amount" placeholder="e.g. 120" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="expense-category">Category</label>
+                    <select id="expense-category" required>
+                        <option value="food">Food & Canteen</option>
+                        <option value="travel">Travel / Auto</option>
+                        <option value="academics">Books & Stationery</option>
+                        <option value="leisure">Entertainment</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Deduct Spending</button>
+            </form>
+        </section>
+
+        <!-- Paper Trading Sandbox -->
+        <section id="trading" class="dashboard-card" aria-labelledby="trading-heading">
+            <h2 id="trading-heading">Paper Trading Sandbox</h2>
+            <div class="portfolio-summary">
+                <p>Virtual Cash Balance: <strong id="virtual-balance">₹10,000.00</strong></p>
+            </div>
+            <div class="stock-ticker-card">
+                <h3>Mock Stock: Nifty EduTech</h3>
+                <p>Current Price: ₹250.00</p>
+                <button id="buy-stock-btn" class="btn btn-accent">Buy 1 Share</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
