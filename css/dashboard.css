@@ -1,0 +1,12 @@
+/* dashboard.html: styles that belong only to this page. */
+.dashboard-s1{font-size:.85rem}
+.dashboard-s2{margin-top:1rem}
+.dashboard-s3{font-size:.78rem;margin-top:.4rem}
+.dashboard-s4{margin-bottom:1rem}
+.dashboard-s5{grid-template-columns:1fr 1fr}
+.dashboard-s6{font-size:1.6rem}
+.dashboard-s7{font-size:.82rem;margin:.4rem 0 1rem}
+.dashboard-s8{margin-bottom:.5rem}
+.dashboard-s9{margin:.4rem 0}
+.dashboard-s10{font-size:.9rem;margin-bottom:1rem}
+.dashboard-s11{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}

@@ -1,0 +1,7 @@
+/* 404 page */
+.notfound{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem;background:var(--ink);color:#cbd5e1}
+.notfound h1{color:#fff;font-size:4rem}
+
+/* Rules that used to be inline style="" attributes */
+.nf-s1{margin:.75rem 0 1.5rem}
+.nf-s2{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}

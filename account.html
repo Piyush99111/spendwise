@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account · SpendWise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/account.css">
+</head>
+<body data-page="account" data-title="Account" data-sub="Your profile and saved data" data-section="SMART WEALTH">
+<main id="content" class="grid g2">
+<section class="card"><h2 class="account-s1">Profile</h2><form id="pf" novalidate><div class="form-msg" role="alert"></div><div class="field"><label for="n">Full name</label><input id="n" name="name"><span class="err" role="alert"></span></div><div class="field"><label for="e">Email or UPI ID</label><input id="e" name="email" readonly><span class="err" role="alert"></span></div><button class="btn" type="submit">Save changes</button></form></section>
+<section class="card"><h2 class="account-s2">Your data</h2><p class="muted account-s3">Everything you enter is stored in this browser as JSON, separately for each account.</p><div class="account-s4"><button class="btn ghost" id="ex">Download my data (JSON)</button><button class="btn danger" id="rs">Reset demo data</button></div></section></main>
+<script src="js/store.js"></script><script src="js/validate.js"></script><script src="js/shell.js"></script>
+<script src="js/account.js"></script>
+</body></html>

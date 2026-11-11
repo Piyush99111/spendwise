@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register · SpendWise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+<main class="auth">
+<section class="auth-dark" aria-label="About SpendWise">
+<div><a class="brand" href="index.html"><img src="assets/logo.png" alt="">SpendWise</a>
+<h1>Precision capital tracking <em>for Indian scholars.</em></h1>
+<p>Access your simulated portfolio and campus UPI ledgers.</p>
+<ul><li>🔒 256-bit Node Encryption</li><li>✓ NPCI UPI Sandbox Compliant</li></ul></div>
+<p><span class="dot"></span>All systems operational · SpendWise Core v3.4.0</p>
+</section>
+<section class="auth-light"><div class="auth-card">
+<p class="label">Create account</p><h1>Register your student ID</h1><p class="sub">Start with ₹1,00,000 in sandbox credit.</p>
+<form id="f" novalidate><div class="form-msg" role="alert"></div>
+<div class="field"><label for="n">Full name</label><input id="n" name="name" type="text" autocomplete="name" placeholder="Your name" required><span class="err" role="alert"></span></div>
+<div class="field"><label for="e">Email or UPI ID</label><input id="e" name="email" type="text" autocomplete="email" placeholder="name@bank" required><span class="err" role="alert"></span></div>
+<div class="field"><label for="pw">Security key</label><div class="pw"><input id="pw" name="password" type="password" autocomplete="new-password" required><button type="button" data-toggle-pw="pw" aria-pressed="false">Show</button></div><span class="err" role="alert"></span></div>
+<div class="field"><label for="pw2">Confirm security key</label><div class="pw"><input id="pw2" name="confirm" type="password" autocomplete="new-password" required><button type="button" data-toggle-pw="pw2" aria-pressed="false">Show</button></div><span class="err" role="alert"></span></div>
+<button class="btn block" type="submit">Create account</button></form>
+<p class="alt">Already registered? <a href="login.html">Sign in</a></p></div></section>
+</main>
+<script src="js/store.js"></script><script src="js/validate.js"></script>
+<script src="js/register.js"></script>
+</body></html>

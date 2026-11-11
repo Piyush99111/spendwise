@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Money & UPI · SpendWise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/money.css">
+</head>
+<body data-page="money" data-title="Money & UPI" data-sub="Cashflow, bills and reconciled transactions" data-section="SMART WEALTH">
+<main id="content" class="grid">
+<section class="grid g3" aria-label="Balances"><div class="card dark"><p class="label">Total balance</p><p class="big" id="tot"></p></div><div class="card"><p class="label">Disposable capital</p><p class="big" id="dis"></p></div><div class="card"><p class="label">Committed outflows</p><p class="big" id="com"></p></div></section>
+<div class="grid g2"><div class="grid">
+<section class="card"><div class="head"><h2>Reconciled UPI streams</h2><div class="tabs" id="cats" role="group" aria-label="Filter by category"></div></div><div id="feed"></div></section></div>
+<div class="grid">
+<section class="card"><h2 class="money-s1">Add a transaction</h2><form id="tf" novalidate><div class="form-msg" role="alert"></div>
+<div class="field"><label for="m">Merchant or person</label><input id="m" name="merchant" autocomplete="off"><span class="err" role="alert"></span></div><div class="field"><label for="a">Amount (₹)</label><input id="a" name="amount" type="number" min="1" step="any" inputmode="decimal"><span class="err" role="alert"></span></div><div class="field"><label for="c">Category</label><select id="c" name="category"><option>Dining &amp; Provisions</option><option>Transportation</option><option>Digital Services</option><option>Education</option><option>Income</option><option>Other</option></select><span class="err" role="alert"></span></div><div class="field"><label for="ty">Type</label><select id="ty" name="type"><option value="out">Money out</option><option value="in">Money in</option></select><span class="err" role="alert"></span></div><button class="btn block" type="submit">Add transaction</button></form></section>
+<section class="card"><h2 class="money-s2">Immediate outflows</h2><div id="bills"></div></section>
+<section class="card"><h2>Savings vs spend</h2><div class="bar money-s3" aria-hidden="true"><i id="sv"></i><i class="r" id="sp"></i></div><p class="money-s4" id="ratio"></p></section>
+</div></div></main>
+<script src="js/store.js"></script><script src="js/validate.js"></script><script src="js/shell.js"></script>
+<script src="js/money.js"></script>
+</body></html>

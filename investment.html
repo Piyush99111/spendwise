@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investment desk · SpendWise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/investment.css">
+</head>
+<body data-page="investment" data-title="Investment desk" data-sub="Practice trading with virtual money. No real funds are at risk." data-section="INVESTMENT DESK">
+<main id="content" class="grid g2"><div class="grid">
+<section class="card dark"><p class="label">Total assets tracked</p><p class="big" id="tot"></p><p id="gain"></p><div class="bar investment-s1" id="alloc" aria-label="Asset allocation"></div><p class="investment-s2" id="legend"></p></section>
+<section class="card"><div class="head"><h2>Active holdings</h2><div class="tabs" id="tabs" role="group" aria-label="Filter holdings"></div></div><div id="list"></div></section></div>
+<div class="grid"><section class="card"><div class="head"><h2>Simulated sandbox</h2><span class="badge">Practice mode</span></div><p class="label">Sandbox cash</p><p class="big" id="cash"></p>
+<form id="tf" novalidate><div class="form-msg" role="alert"></div><div class="field"><label for="as">Asset</label><select id="as" name="asset"></select><span class="err" role="alert"></span></div><div class="field"><label for="ac">Action</label><select id="ac" name="action"><option value="buy">Buy</option><option value="sell">Sell</option></select><span class="err" role="alert"></span></div><div class="field"><label for="am">Amount (₹)</label><input id="am" name="amount" type="number" min="1" step="any"><span class="err" role="alert"></span></div><button class="btn block" type="submit">Place practice order</button></form></section></div></main>
+<script src="js/store.js"></script><script src="js/validate.js"></script><script src="js/shell.js"></script>
+<script src="js/investment.js"></script>
+</body></html>

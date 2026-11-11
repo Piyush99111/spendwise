@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPI tools · SpendWise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arapey:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/upi.css">
+</head>
+<body data-page="upi" data-title="UPI tools" data-sub="Link your UPI ID, make payment links and QR codes, import statements" data-section="SMART WEALTH">
+<main id="content" class="grid g2"><div class="grid">
+<section class="card"><h2 class="upi-s1">Payment link and QR code</h2><p class="muted upi-s2">Scan the code or open the link on your phone to pay from your own UPI app. SpendWise never handles the money.</p>
+<form id="pf" novalidate><div class="form-msg" role="alert"></div><div class="grid upi-s3"><div class="field"><label for="pa">Payee UPI ID</label><input id="pa" name="pa" placeholder="name@bank" autocomplete="off"><span class="err" role="alert"></span></div><div class="field"><label for="pn">Payee name</label><input id="pn" name="pn" autocomplete="off"><span class="err" role="alert"></span></div><div class="field"><label for="am">Amount (₹)</label><input id="am" name="amount" type="number" min="1" step="any"><span class="err" role="alert"></span></div><div class="field"><label for="tn">Note (optional)</label><input id="tn" name="note" maxlength="40"><span class="err" role="alert"></span></div></div><button class="btn" type="submit">Create link and QR</button></form>
+<div class="upi-s4" id="out" hidden><div class="upi-s5" id="qr" role="img" aria-label="UPI payment QR code"></div>
+<div class="upi-s6"><p class="label">Payment link</p><p class="upi-s7" id="link"></p><div class="upi-s8"><a class="btn sm" id="open" href="#">Open in UPI app</a><button class="btn ghost sm" id="copy" type="button">Copy link</button><button class="btn ghost sm" id="log" type="button">I paid: log it</button></div></div></div></section>
+<section class="card"><h2 class="upi-s1">Import a statement (CSV)</h2><p class="muted upi-s2">Columns: <code>date, description, amount, type</code> where type is <code>debit</code> or <code>credit</code>. Transactions are sorted into categories automatically.</p>
+<div class="upi-s9"><input type="file" id="file" accept=".csv,text/csv" aria-label="Choose CSV file"><button class="btn ghost sm" id="sample" type="button">Download sample CSV</button></div>
+<div class="form-msg" id="imsg" role="alert"></div><div id="prev"></div><button class="btn upi-s10" id="go" type="button" hidden>Import these transactions</button></section></div>
+<div class="grid"><section class="card"><h2 class="upi-s1">Your UPI ID</h2><p class="muted upi-s2">Shown in the sidebar and used as the default payee.</p>
+<form id="lf" novalidate><div class="form-msg" role="alert"></div><div class="field"><label for="mu">UPI ID</label><input id="mu" name="upi" placeholder="name@bank" autocomplete="off"><span class="err" role="alert"></span></div><button class="btn" type="submit">Save UPI ID</button></form></section>
+<section class="card dark"><p class="label">How real is this?</p><p class="upi-s11">Links use the standard <code>upi://pay</code> format that GPay, PhonePe and Paytm all open. Real bank access needs a licensed provider, so statement import is the safe way to bring real spending in.</p></section></div></main>
+<script src="js/store.js"></script><script src="js/validate.js"></script><script src="js/vendor/qrcode.js"></script><script src="js/shell.js"></script>
+<script src="js/upi.js"></script>
+</body></html>

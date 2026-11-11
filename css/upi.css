@@ -1,0 +1,12 @@
+/* upi.html: styles that belong only to this page. */
+.upi-s1{margin-bottom:.4rem}
+.upi-s2{font-size:.88rem;margin-bottom:1rem}
+.upi-s3{grid-template-columns:1fr 1fr;gap:0 1rem}
+.upi-s4{margin-top:1.25rem;display:none;gap:1.25rem;align-items:center;flex-wrap:wrap}
+.upi-s5{background:#fff;padding:.5rem;border:1px solid var(--line);border-radius:12px}
+.upi-s6{flex:1;min-width:220px}
+.upi-s7{font-size:.78rem;word-break:break-all;margin:.3rem 0 .8rem}
+.upi-s8{display:flex;gap:.5rem;flex-wrap:wrap}
+.upi-s9{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.upi-s10{margin-top:1rem}
+.upi-s11{font-size:.88rem;margin-top:.5rem}

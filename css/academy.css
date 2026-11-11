@@ -1,0 +1,6 @@
+/* academy.html: styles that belong only to this page. */
+.academy-s1{font-size:.8rem;margin-top:1rem}
+.academy-s2{font-size:.85rem;margin-top:.6rem}
+.academy-s3{margin-bottom:1rem}
+.academy-s4{margin-bottom:.5rem}
+.academy-s5{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
