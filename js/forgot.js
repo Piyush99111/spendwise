@@ -1,14 +1,39 @@
-/* forgot.html page script. Loaded after store.js, validate.js and shell.js. */
-wireForm(document.getElementById('f'), {
-    email: [Rules.email],
-    password: [Rules.password]
-}, (v, form) => {
-    if (!Store.root().users.some(x => x.email.toLowerCase() === v.email.trim()
-        .toLowerCase())) return showMsg(form, 'No account found for that ID.', 'bad');
-    Store.updateRoot(r => {
-        r.users.find(x => x.email.toLowerCase() === v.email.trim().toLowerCase())
-            .password = v.password;
-    });
-    showMsg(form, 'Key updated. Redirecting to sign in…', 'good');
-    setTimeout(() => location.href = 'login.html', 1200);
-});
+/* ==========================================================================
+   forgot.js — Password Reset Logic
+   ========================================================================== */
+
+const resetForm = document.getElementById('f');
+
+// Validate email and new password, then update the user's stored password
+wireForm(
+    resetForm,
+    {
+        email: [Rules.email],
+        password: [Rules.password]
+    },
+    (formValues, formEl) => {
+        const normalizedEmail = formValues.email.trim().toLowerCase();
+        const accountExists = Store.root().users.some(
+            user => user.email.toLowerCase() === normalizedEmail
+        );
+
+        if (!accountExists) {
+            showMsg(formEl, 'No account found for that ID.', 'bad');
+            return;
+        }
+
+        // Save the new password for the matching user
+        Store.updateRoot(rootData => {
+            const matchedUser = rootData.users.find(
+                user => user.email.toLowerCase() === normalizedEmail
+            );
+            matchedUser.password = formValues.password;
+        });
+
+        showMsg(formEl, 'Key updated. Redirecting to sign in…', 'good');
+
+        setTimeout(() => {
+            location.href = 'login.html';
+        }, 1200);
+    }
+);

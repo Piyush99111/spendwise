@@ -1,97 +1,216 @@
-/* money.html page script. Loaded after store.js, validate.js and shell.js. */
-let cat = 'All';
-const esc = s => String(s).replace(/[&<>"]/g, c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;'
-} [c]));
+/* ==========================================================================
+   money.js — Cashflow, Transactions, Bills & Savings Ratio
+   ========================================================================== */
 
+let activeCategory = 'All';
+
+// Escape special characters to prevent HTML injection (XSS) when rendering user text
+const esc = (str) => {
+    const htmlEntities = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;'
+    };
+    return String(str).replace(/[&<>"]/g, char => htmlEntities[char]);
+};
+
+// DOM references
+const totalBalanceEl = document.getElementById('tot');
+const disposableEl = document.getElementById('dis');
+const committedEl = document.getElementById('com');
+const categoryTabsEl = document.getElementById('cats');
+const transactionFeedEl = document.getElementById('feed');
+const billsListEl = document.getElementById('bills');
+const savingsBarEl = document.getElementById('sv');
+const spendBarEl = document.getElementById('sp');
+const ratioTextEl = document.getElementById('ratio');
+const searchInput = document.getElementById('q');
+const transactionForm = document.getElementById('tf');
+
+// Redraw balances, category tabs, transactions list, bills, and savings ratio bar
 function render() {
-    const db = Store.load(),
-        t = totals(db),
-        q = document.getElementById('q').value.trim().toLowerCase();
-    tot.textContent = money(t.total);
-    dis.textContent = money(t.disposable);
-    com.textContent = money(t.committed);
-    const cats = ['All', ...new Set(db.transactions.map(x => x.category))];
-    document.getElementById('cats').innerHTML = cats.map(c =>
-            `<button class="tab" aria-pressed="${c===cat}" data-cat="${esc(c)}">${esc(c)}</button>`)
+    const userData = Store.load();
+    const balanceSummary = totals(userData);
+    const searchQuery = searchInput.value.trim().toLowerCase();
+
+    // 1. Update top balance cards
+    totalBalanceEl.textContent = money(balanceSummary.total);
+    disposableEl.textContent = money(balanceSummary.disposable);
+    committedEl.textContent = money(balanceSummary.committed);
+
+    // 2. Render category filter tabs
+    const uniqueCategories = ['All', ...new Set(userData.transactions.map(tx => tx.category))];
+    categoryTabsEl.innerHTML = uniqueCategories
+        .map(categoryName => {
+            const isSelected = categoryName === activeCategory;
+            return `<button class="tab" aria-pressed="${isSelected}" data-cat="${esc(categoryName)}">${esc(categoryName)}</button>`;
+        })
         .join('');
-    const rows = db.transactions.filter(x => (cat === 'All' || x.category === cat) && (x.merchant +
-        x.category).toLowerCase().includes(q)).sort((a, b) => b.date.localeCompare(a.date));
-    feed.innerHTML = rows.length ? rows.map(x =>
-        `<div class="row"><span class="ic">${esc(x.merchant.slice(0,2).toUpperCase())}</span><div class="grow"><b>${esc(x.merchant)}</b><span>${new Date(x.date).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})} · ${esc(x.category)}</span></div><b class="${x.type==='in'?'up':''}">${x.type==='in'?'+':'-'}${money(x.amount)}</b><button class="btn ghost sm" data-del="${x.id}" aria-label="Delete ${esc(x.merchant)}">Delete</button></div>`
-        ).join('') : '<p class="empty">No transactions match. Add one with the form.</p>';
-    bills.innerHTML = db.bills.length ? db.bills.map(b =>
-        `<div class="row"><span class="ic">${esc(b.name.slice(0,2).toUpperCase())}</span><div class="grow"><b>${esc(b.name)}</b><span>${esc(b.due)}</span></div><b>${money(b.amount)}</b><button class="btn ghost sm" data-pay="${b.id}">Pay</button></div>`
-        ).join('') : '<p class="empty">Nothing due. You are all caught up.</p>';
-    const inc = db.transactions.filter(x => x.type === 'in').reduce((a, x) => a + x.amount, 0),
-        out = db.transactions.filter(x => x.type === 'out' && x.category !== 'Savings goal').reduce(
-            (a, x) => a + x.amount, 0),
-        base = Math.max(inc, out, 1),
-        save = Math.max(0, inc - out);
-    sv.style.width = save / base * 100 + '%';
-    sp.style.width = out / base * 100 + '%';
-    ratio.textContent =
-        `Savings ${money(save)} (${inc?Math.round(save/inc*100):0}% of inflow) · Spent ${money(out)}`;
+
+    // 3. Filter and sort transactions (newest first)
+    const filteredTransactions = userData.transactions
+        .filter(tx => {
+            const matchesCategory = activeCategory === 'All' || tx.category === activeCategory;
+            const matchesSearch = (tx.merchant + tx.category).toLowerCase().includes(searchQuery);
+            return matchesCategory && matchesSearch;
+        })
+        .sort((txA, txB) => txB.date.localeCompare(txA.date));
+
+    if (filteredTransactions.length) {
+        transactionFeedEl.innerHTML = filteredTransactions
+            .map(tx => {
+                const iconLetters = esc(tx.merchant.slice(0, 2).toUpperCase());
+                const formattedDate = new Date(tx.date).toLocaleString('en-IN', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                });
+                const amountClass = tx.type === 'in' ? 'up' : '';
+                const amountSign = tx.type === 'in' ? '+' : '-';
+
+                return `
+                    <div class="row">
+                        <span class="ic">${iconLetters}</span>
+                        <div class="grow">
+                            <b>${esc(tx.merchant)}</b>
+                            <span>${formattedDate} · ${esc(tx.category)}</span>
+                        </div>
+                        <b class="${amountClass}">${amountSign}${money(tx.amount)}</b>
+                        <button class="btn ghost sm" data-del="${tx.id}" aria-label="Delete ${esc(tx.merchant)}">Delete</button>
+                    </div>
+                `;
+            })
+            .join('');
+    } else {
+        transactionFeedEl.innerHTML = '<p class="empty">No transactions match. Add one with the form.</p>';
+    }
+
+    // 4. Render immediate upcoming bills
+    if (userData.bills.length) {
+        billsListEl.innerHTML = userData.bills
+            .map(bill => {
+                const iconLetters = esc(bill.name.slice(0, 2).toUpperCase());
+                return `
+                    <div class="row">
+                        <span class="ic">${iconLetters}</span>
+                        <div class="grow">
+                            <b>${esc(bill.name)}</b>
+                            <span>${esc(bill.due)}</span>
+                        </div>
+                        <b>${money(bill.amount)}</b>
+                        <button class="btn ghost sm" data-pay="${bill.id}">Pay</button>
+                    </div>
+                `;
+            })
+            .join('');
+    } else {
+        billsListEl.innerHTML = '<p class="empty">Nothing due. You are all caught up.</p>';
+    }
+
+    // 5. Calculate and render Savings vs Spend progress bars
+    const totalInflow = userData.transactions
+        .filter(tx => tx.type === 'in')
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+    const totalOutflow = userData.transactions
+        .filter(tx => tx.type === 'out' && tx.category !== 'Savings goal')
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
+    const barScaleBase = Math.max(totalInflow, totalOutflow, 1);
+    const netSavings = Math.max(0, totalInflow - totalOutflow);
+    const savingsRatePct = totalInflow ? Math.round((netSavings / totalInflow) * 100) : 0;
+
+    savingsBarEl.style.width = (netSavings / barScaleBase) * 100 + '%';
+    spendBarEl.style.width = (totalOutflow / barScaleBase) * 100 + '%';
+    ratioTextEl.textContent =
+        `Savings ${money(netSavings)} (${savingsRatePct}% of inflow) · Spent ${money(totalOutflow)}`;
 }
-document.addEventListener('click', e => {
-    const c = e.target.closest('[data-cat]'),
-        d = e.target.closest('[data-del]'),
-        p = e.target.closest('[data-pay]');
-    if (c) {
-        cat = c.dataset.cat;
+
+// Event delegation for category tabs, transaction deletion, and bill payments
+document.addEventListener('click', (event) => {
+    const categoryTabBtn = event.target.closest('[data-cat]');
+    const deleteTxBtn = event.target.closest('[data-del]');
+    const payBillBtn = event.target.closest('[data-pay]');
+
+    // Switch active category filter
+    if (categoryTabBtn) {
+        activeCategory = categoryTabBtn.dataset.cat;
         render();
     }
-    if (d) {
-        Store.update(db => {
-            const x = db.transactions.find(t => t.id === d.dataset.del);
-            if (x) db.cash += x.type === 'out' ? x.amount : -x.amount;
-            db.transactions = db.transactions.filter(t => t.id !== d.dataset.del);
+
+    // Delete a transaction and reverse its effect on cash balance
+    if (deleteTxBtn) {
+        const txIdToDelete = deleteTxBtn.dataset.del;
+
+        Store.update(userData => {
+            const targetTx = userData.transactions.find(tx => tx.id === txIdToDelete);
+            if (targetTx) {
+                userData.cash += targetTx.type === 'out' ? targetTx.amount : -targetTx.amount;
+            }
+            userData.transactions = userData.transactions.filter(tx => tx.id !== txIdToDelete);
         });
+
         Ui.toast('Transaction deleted');
         render();
     }
-    if (p) {
-        const db = Store.load(),
-            b = db.bills.find(x => x.id === p.dataset.pay);
-        if (b.amount > db.cash) return Ui.toast('Not enough balance to pay this bill');
-        Store.update(db => {
-            db.cash -= b.amount;
-            db.bills = db.bills.filter(x => x.id !== b.id);
-            db.transactions.push({
+
+    // Pay a due bill and record it as a transaction
+    if (payBillBtn) {
+        const userData = Store.load();
+        const targetBill = userData.bills.find(bill => bill.id === payBillBtn.dataset.pay);
+
+        if (targetBill.amount > userData.cash) {
+            Ui.toast('Not enough balance to pay this bill');
+            return;
+        }
+
+        Store.update(data => {
+            data.cash -= targetBill.amount;
+            data.bills = data.bills.filter(bill => bill.id !== targetBill.id);
+            data.transactions.push({
                 id: Store.uid('t'),
-                merchant: b.name,
+                merchant: targetBill.name,
                 category: 'Bills',
-                amount: b.amount,
+                amount: targetBill.amount,
                 type: 'out',
                 date: new Date().toISOString().slice(0, 16)
             });
         });
-        Ui.toast(b.name + ' paid');
+
+        Ui.toast(targetBill.name + ' paid');
         render();
     }
 });
-document.getElementById('q').addEventListener('input', render);
-wireForm(document.getElementById('tf'), {
-    merchant: [Rules.required],
-    amount: [Rules.amount]
-}, (v, form) => {
-    const amt = Number(v.amount);
-    Store.update(db => {
-        db.transactions.push({
-            id: Store.uid('t'),
-            merchant: v.merchant.trim(),
-            category: v.category,
-            amount: amt,
-            type: v.type,
-            date: new Date().toISOString().slice(0, 16)
+
+// Re-render when typing in the top search bar
+searchInput.addEventListener('input', render);
+
+// Handle "Add a transaction" form submission
+wireForm(
+    transactionForm,
+    {
+        merchant: [Rules.required],
+        amount: [Rules.amount]
+    },
+    (formValues, formEl) => {
+        const txAmount = Number(formValues.amount);
+
+        Store.update(userData => {
+            userData.transactions.push({
+                id: Store.uid('t'),
+                merchant: formValues.merchant.trim(),
+                category: formValues.category,
+                amount: txAmount,
+                type: formValues.type,
+                date: new Date().toISOString().slice(0, 16)
+            });
+            userData.cash += formValues.type === 'in' ? txAmount : -txAmount;
         });
-        db.cash += v.type === 'in' ? amt : -amt;
-    });
-    form.reset();
-    Ui.toast('Transaction saved');
-    render();
-});
+
+        formEl.reset();
+        Ui.toast('Transaction saved');
+        render();
+    }
+);
+
 render();
